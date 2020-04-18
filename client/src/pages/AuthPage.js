@@ -87,6 +87,7 @@ const AuthPage = () => {
                   type="email"
                   name="email"
                   className="white-text"
+                  value={form.email}
                   onChange={changeHandler}
                 />
                 <label htmlFor="email" className="white-text">
@@ -101,6 +102,7 @@ const AuthPage = () => {
                   type="password"
                   name="password"
                   className="white-text"
+                  value={form.password}
                   onChange={changeHandler}
                 />
                 <label htmlFor="password" className="white-text">
