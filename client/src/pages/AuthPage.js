@@ -6,18 +6,18 @@ import useMessage from '../hooks/message.hook';
 const AuthPage = () => {
   const message = useMessage();
   // const [isLogIn, setIsLogIn] = useState(true);
-  const { loading, request, error } = useHttp();
+  const { loading, request, error, clearError } = useHttp();
 
   const [form, setForm] = useState({
     email: '',
     password: ''
   });
 
-  useEffect(() => {
-    if (error) {
-      message(error.message);
-    }
-  }, [error, message]);
+  // useEffect(() => {
+  //   if (error) {
+  //     message(error.message);
+  //   }
+  // }, [error, message, clearError]);
 
   const changeHandler = event => {
     setForm({
@@ -26,21 +26,39 @@ const AuthPage = () => {
     });
   };
 
-  const formHandler = async event => {
+  const registerHandler = async event => {
     event.preventDefault();
     try {
       const data = await request('/api/auth/register', 'POST', { ...form });
+      message(data.message);
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  const loginHandler = async event => {
+    event.preventDefault();
+    try {
+      const data = await request('/api/auth/login', 'POST', { ...form });
+      console.log(data);
+      message(data.message);
     } catch (e) {
       throw e;
     }
   };
 
   const renderError = (errors, key) => {
+    if (!errors) {
+      return null;
+    }
     return (
       <ul className="collection">
         {errors.map(item => {
           return item.param === key ? (
-            <li className="collection-item red-text text-darken-4" key={item}>
+            <li
+              className="collection-item red-text text-darken-4"
+              key={item.msg}
+            >
               {item.msg}
             </li>
           ) : null;
@@ -63,7 +81,7 @@ const AuthPage = () => {
         <div className="card green darken-2">
           <div className="card-content white-text">
             <span className="card-title">Auth</span>
-            <form onSubmit={formHandler}>
+            <div>
               <div className="input-field">
                 <input
                   placeholder="Your e-mail"
@@ -76,7 +94,7 @@ const AuthPage = () => {
                 <label htmlFor="email" className="white-text">
                   Email
                 </label>
-                { error && renderError(error.errors, 'email') }
+                {error && renderError(error.errors, 'email')}
               </div>
               <div className="input-field">
                 <input
@@ -90,22 +108,18 @@ const AuthPage = () => {
                 <label htmlFor="password" className="white-text">
                   password
                 </label>
-                { error && renderError(error.errors, 'password') }
+                {error && renderError(error.errors, 'password')}
               </div>
-              <div className="input-field">
-                <input
-                  type="submit"
-                  value="Submit"
-                  className="btn white-text"
-                  disabled={loading}
-                />
-              </div>
-            </form>
+            </div>
           </div>
           <div className="card-action">
             <div className="row">
               <div className="col s3">
-                <button className="btn yellow darken-4" disabled={loading}>
+                <button
+                  className="btn yellow darken-4"
+                  disabled={loading}
+                  onClick={loginHandler}
+                >
                   Sign in
                 </button>
               </div>
@@ -113,6 +127,7 @@ const AuthPage = () => {
                 <button
                   className="btn deep-purple lighten-1"
                   disabled={loading}
+                  onClick={registerHandler}
                 >
                   Register
                 </button>
