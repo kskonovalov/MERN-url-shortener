@@ -21,7 +21,10 @@ const useHttp = () => {
         const data = await response.json();
         setLoading(false);
         if(!response.ok) {
-          setError(data.message || `Something get wrong`);
+          setError({
+            message: data.message,
+            errors: data.errors
+          });
         }
 
         return data;

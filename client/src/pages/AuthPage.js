@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import useHttp from '../hooks/http.hook';
+import useMessage from '../hooks/message.hook';
 
 const AuthPage = () => {
-  const [isLogIn, setIsLogIn] = useState(true);
-  const {loading, request, error} = useHttp();
+  const message = useMessage();
+  // const [isLogIn, setIsLogIn] = useState(true);
+  const { loading, request, error } = useHttp();
 
   const [form, setForm] = useState({
     email: '',
     password: ''
   });
+
+  useEffect(() => {
+    if (error) {
+      message(error.message);
+    }
+  }, [error, message]);
 
   const changeHandler = event => {
     setForm({
@@ -18,15 +26,28 @@ const AuthPage = () => {
     });
   };
 
-  const formHandler = async(event) => {
+  const formHandler = async event => {
     event.preventDefault();
     try {
-      const data = await request('/api/auth/register', 'POST', {...form});
-      console.log(data);
+      const data = await request('/api/auth/register', 'POST', { ...form });
     } catch (e) {
       throw e;
     }
-  }
+  };
+
+  const renderError = (errors, key) => {
+    return (
+      <ul className="collection">
+        {errors.map(item => {
+          return item.param === key ? (
+            <li className="collection-item red-text text-darken-4" key={item}>
+              {item.msg}
+            </li>
+          ) : null;
+        })}
+      </ul>
+    );
+  };
 
   return (
     <div className="row">
@@ -34,6 +55,11 @@ const AuthPage = () => {
         <h1>MERN Link Shortener</h1>
       </div>
       <div className="col s6 offset-s3">
+        {error && (
+          <ul className="collection">
+            <li className="collection-item red lighten-3">{error.message}</li>
+          </ul>
+        )}
         <div className="card green darken-2">
           <div className="card-content white-text">
             <span className="card-title">Auth</span>
@@ -50,6 +76,7 @@ const AuthPage = () => {
                 <label htmlFor="email" className="white-text">
                   Email
                 </label>
+                { error && renderError(error.errors, 'email') }
               </div>
               <div className="input-field">
                 <input
@@ -63,6 +90,7 @@ const AuthPage = () => {
                 <label htmlFor="password" className="white-text">
                   password
                 </label>
+                { error && renderError(error.errors, 'password') }
               </div>
               <div className="input-field">
                 <input
@@ -77,10 +105,17 @@ const AuthPage = () => {
           <div className="card-action">
             <div className="row">
               <div className="col s3">
-                <button className="btn yellow darken-4" disabled={loading}>Sign in</button>
+                <button className="btn yellow darken-4" disabled={loading}>
+                  Sign in
+                </button>
               </div>
               <div className="col s3">
-                <button className="btn deep-purple lighten-1" disabled={loading}>Register</button>
+                <button
+                  className="btn deep-purple lighten-1"
+                  disabled={loading}
+                >
+                  Register
+                </button>
               </div>
             </div>
           </div>
