@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
+import useHttp from '../hooks/http.hook';
+
 const AuthPage = () => {
   const [isLogIn, setIsLogIn] = useState(true);
+  const {loading, request, error} = useHttp();
+
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -14,7 +18,15 @@ const AuthPage = () => {
     });
   };
 
-
+  const formHandler = async(event) => {
+    event.preventDefault();
+    try {
+      const data = await request('/api/auth/register', 'POST', {...form});
+      console.log(data);
+    } catch (e) {
+      throw e;
+    }
+  }
 
   return (
     <div className="row">
@@ -25,7 +37,7 @@ const AuthPage = () => {
         <div className="card green darken-2">
           <div className="card-content white-text">
             <span className="card-title">Auth</span>
-            <form>
+            <form onSubmit={formHandler}>
               <div className="input-field">
                 <input
                   placeholder="Your e-mail"
@@ -57,6 +69,7 @@ const AuthPage = () => {
                   type="submit"
                   value="Submit"
                   className="btn white-text"
+                  disabled={loading}
                 />
               </div>
             </form>
@@ -64,10 +77,10 @@ const AuthPage = () => {
           <div className="card-action">
             <div className="row">
               <div className="col s3">
-                <button className="btn yellow darken-4">Sign in</button>
+                <button className="btn yellow darken-4" disabled={loading}>Sign in</button>
               </div>
               <div className="col s3">
-                <button className="btn deep-purple lighten-1">Register</button>
+                <button className="btn deep-purple lighten-1" disabled={loading}>Register</button>
               </div>
             </div>
           </div>
