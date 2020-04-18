@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import useHttp from '../hooks/http.hook';
 import useMessage from '../hooks/message.hook';
@@ -40,6 +40,10 @@ const AuthPage = () => {
       throw e;
     }
   };
+
+  useEffect(() => {
+    window.M.updateTextFields();
+  }, []);
 
   const renderError = (errors, key) => {
     if (!errors) {
