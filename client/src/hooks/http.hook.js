@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { header } from 'express-validator';
 
 const useHttp = () => {
   const [loading, setLoading] = useState(false);
