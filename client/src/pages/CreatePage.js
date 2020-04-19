@@ -14,7 +14,7 @@ const CreatePage = () => {
     event.preventDefault();
     if (event.key === 'Enter') {
       try {
-        const data = await request('/api/link/generate', 'POST', { from: link }, {
+        const data = await request('/api/link/generate', 'POST', { url: link }, {
           Authorization: `Bearer ${auth.token}`
         });
         history.push(`/detail/${data.url._id}`);
