@@ -31,7 +31,7 @@ const DetailPage = () => {
 
   return (
     <>
-      <h1>Detail page</h1>
+      <h1>Link detail page</h1>
       {link && <LinkCard link={link} />}
     </>
   );
