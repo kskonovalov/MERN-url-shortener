@@ -22,7 +22,7 @@
     "shortid": "^2.2.17"
   },
   "devDependencies": {
-    "concurrently": "^10.0.4",
+    "concurrently": "^10.0.6",
     "eslint": "^9.38.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-jest-enzyme": "^7.1.2",
